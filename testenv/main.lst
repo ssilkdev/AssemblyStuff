@@ -1,0 +1,13 @@
+     1                                  section .data
+     2 00000000 0A000000140000001E-     arrayD dd 10d, 20d, 30d
+     2 00000009 000000             
+     3                                  section .text
+     4                                  global _start
+     5                                  
+     6                                  _start:
+     7 00000000 BE03000000              	mov esi,3
+     8 00000005 8B2D[08000000]          	mov ebp,[arrayD+2*4]
+     9 0000000B 89EB                    	mov ebx,ebp
+    10 0000000D B801000000              	mov eax,1
+    11 00000012 CD80                    	int 0x80
+    12                                  	
