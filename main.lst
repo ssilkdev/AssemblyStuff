@@ -1,32 +1,20 @@
-     1                                  ;Program demonstrates changing eip
-     2                                  ;_start calls proc1 and then proc1 calls proc2
-     3                                  ;proc2 pops the stack twice to get the return address that would bring proc1 back to start
-     4                                  ;It stores the offset into eax
-     5                                  ;Then add 17 bytes to eax so that the offset it points to is the first mov instruct in proc1
-     6                                  
-     7                                  BITS 32
-     8                                  
-     9                                  section .text
-    10                                  global _start
-    11                                  
-    12                                  _start:
-    13 00000000 E80C000000              	call proc1
-    14 00000005 B801000000              	mov eax,1
-    15 0000000A BB0A000000              	mov ebx,10
-    16 0000000F CD80                    	int 0x80
-    17                                  
-    18                                  proc1:
-    19 00000011 E80C000000              	call proc2
-    20 00000016 B801000000              	mov eax,1
-    21 0000001B BB14000000              	mov ebx,20
-    22 00000020 CD80                    	int 0x80
-    23                                  
-    24                                  proc2:
-    25 00000022 58                      	pop eax	
-    26 00000023 58                      	pop eax
-    27 00000024 83C011                  	add eax,17
-    28 00000027 FFE0                    	jmp eax
-    29 00000029 B801000000              	mov eax,1
-    30 0000002E BB1E000000              	mov ebx,30
-    31 00000033 CD80                    	int 0x80
-    32                                  
+     1                                  section .text
+     2                                  global _start
+     3                                  
+     4                                  _start:
+     5 00000000 E80C000000              	call test
+     6 00000005 B801000000              	mov eax,1
+     7 0000000A BB0A000000              	mov ebx,10
+     8 0000000F CD80                    	int 0x80
+     9                                  
+    10                                  test:
+    11 00000011 E80C000000              	call test2
+    12 00000016 B801000000              	mov eax,1
+    13 0000001B BB14000000              	mov ebx,20
+    14 00000020 CD80                    	int 0x80
+    15                                  
+    16                                  test2:
+    17 00000022 B801000000              	mov eax,1
+    18 00000027 83C404                  	add esp,4
+    19 0000002A FF2424                  	jmp [esp]
+    20 0000002D CD80                    	int 0x80
