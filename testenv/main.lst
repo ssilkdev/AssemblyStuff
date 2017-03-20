@@ -1,62 +1,19 @@
-     1                                  section .data
-     2 00000000 310A                    	oneBin db '1',0x0a
-     3 00000002 300A                    	zeroBin db '0',0x0a
-     4                                  	len equ 2
-     5                                  
-     6                                  section .text
-     7                                  global _start
-     8                                  
-     9                                  _start:
-    10 00000000 BDF0FFFFFF              	mov ebp,0xFFFFFFF0		;binary string to write
-    11 00000005 B920000000              	mov ecx,32			;Len of binary string
-    12                                  	L1:				;Loop for writing string
-    13 0000000A 51                      		push ecx		;Push current loop index to stack 
-    14 0000000B D1E5                    		shl ebp,1
-    15 0000000D 7214                    		jc L3
-    16 0000000F E836000000              		call _writeZeroBin
-    17 00000014 59                      		pop ecx
-    18 00000015 E2F3                    		loop L1
-    19                                  
-    20 00000017 B801000000              	mov eax,1
-    21 0000001C BB00000000              	mov ebx,0
-    22 00000021 CD80                    	int 0x80	
-    23                                  
-    24                                  L3:
-    25 00000023 E803000000              	call _writeOneBin
-    26 00000028 59                      	pop ecx
-    27 00000029 E2DF                    	loop L1
-    28                                  	
-    29                                  ;Writes one to stdout
-    30                                  _writeOneBin:
-    31 0000002B 50                      	push eax
-    32 0000002C 53                      	push ebx
-    33 0000002D 51                      	push ecx
-    34 0000002E 52                      	push edx 		
-    35 0000002F B804000000              	mov eax,4	;Sys_write
-    36 00000034 BB01000000              	mov ebx,1	;stdin
-    37 00000039 B9[00000000]            	mov ecx,oneBin	;Write 1
-    38 0000003E BA02000000              	mov edx,len	;len = 1
-    39 00000043 CD80                    	int 0x80	;interrupt
-    40 00000045 5A                      	pop edx
-    41 00000046 59                      	pop ecx
-    42 00000047 5B                      	pop ebx
-    43 00000048 58                      	pop eax
-    44 00000049 C3                      	ret
-    45                                  ;Writes zero to stdout
-    46                                  _writeZeroBin:
-    47 0000004A 50                      	push eax
-    48 0000004B 53                      	push ebx
-    49 0000004C 51                      	push ecx
-    50 0000004D 52                      	push edx
-    51 0000004E B804000000              	mov eax,4
-    52 00000053 BB01000000              	mov ebx,1
-    53 00000058 B9[02000000]            	mov ecx,zeroBin
-    54 0000005D BA02000000              	mov edx,len
-    55 00000062 CD80                    	int 0x80
-    56 00000064 5A                      	pop edx
-    57 00000065 59                      	pop ecx
-    58 00000066 5B                      	pop ebx
-    59 00000067 58                      	pop eax
-    60 00000068 C3                      	ret
-    61                                  ;Write to Binary
-    62                                  	
+     1                                  BITS 32
+     2                                  
+     3                                  section .data
+     4                                  section .text
+     5                                  global _start
+     6                                  
+     7                                  _start:
+     8 00000000 6A08                    	push 8d
+     9 00000002 6A09                    	push 9d
+    10 00000004 E800000000              	call addTwo
+    11                                  
+    12                                  addTwo:
+    13 00000009 55                      	push ebp
+    14 0000000A 89E5                    	mov ebp,esp
+    15 0000000C 8B550C                  	mov edx, [ebp + 12]
+    16 0000000F 035508                  	add edx, [ebp + 8]
+    17 00000012 89D3                    	mov ebx,edx
+    18 00000014 B801000000              	mov eax,1
+    19 00000019 CD80                    	int 0x80
